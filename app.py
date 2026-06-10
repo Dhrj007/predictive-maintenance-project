@@ -64,11 +64,16 @@ def render_feature_importance_chart(feature_importance: pd.DataFrame) -> None:
     labels = [FEATURE_LABELS.get(feature, feature) for feature in chart_data["feature"]]
 
     fig, ax = plt.subplots(figsize=(8, 4.8))
-    colors = ["#1f77b4", "#2ca02c", "#ff7f0e", "#d62728", "#9467bd"]
+    fig.patch.set_facecolor("#111827")
+    ax.set_facecolor("#111827")
+    colors = ["#38bdf8", "#22c55e", "#f59e0b", "#ef4444", "#a78bfa"]
     ax.barh(labels, chart_data["importance"], color=colors[: len(labels)])
-    ax.set_xlabel("Importance Score")
-    ax.set_title("Random Forest Feature Importance")
-    ax.grid(axis="x", alpha=0.2)
+    ax.set_xlabel("Importance Score", color="#cbd5e1")
+    ax.set_title("Random Forest Feature Importance", color="#f8fafc", pad=14)
+    ax.tick_params(colors="#cbd5e1")
+    ax.grid(axis="x", color="#334155", alpha=0.55)
+    ax.spines["left"].set_color("#475569")
+    ax.spines["bottom"].set_color("#475569")
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     st.pyplot(fig, use_container_width=True)
@@ -78,18 +83,30 @@ def render_probability_chart(failure_probability: float) -> None:
     safe_probability = 1 - failure_probability
     labels = ["No Failure", "Failure"]
     values = [safe_probability, failure_probability]
-    colors = ["#2ca02c", "#d62728"]
+    colors = ["#22c55e", "#ef4444"]
 
     fig, ax = plt.subplots(figsize=(6.5, 3.8))
+    fig.patch.set_facecolor("#111827")
+    ax.set_facecolor("#111827")
     ax.bar(labels, values, color=colors)
     ax.set_ylim(0, 1)
-    ax.set_ylabel("Probability")
-    ax.set_title("Prediction Probability")
-    ax.grid(axis="y", alpha=0.2)
+    ax.set_ylabel("Probability", color="#cbd5e1")
+    ax.set_title("Prediction Probability", color="#f8fafc", pad=14)
+    ax.tick_params(colors="#cbd5e1")
+    ax.grid(axis="y", color="#334155", alpha=0.55)
 
     for index, value in enumerate(values):
-        ax.text(index, value + 0.03, f"{value * 100:.1f}%", ha="center", fontweight="bold")
+        ax.text(
+            index,
+            value + 0.03,
+            f"{value * 100:.1f}%",
+            ha="center",
+            fontweight="bold",
+            color="#f8fafc",
+        )
 
+    ax.spines["left"].set_color("#475569")
+    ax.spines["bottom"].set_color("#475569")
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     st.pyplot(fig, use_container_width=True)
@@ -105,85 +122,153 @@ st.markdown(
     """
     <style>
         .stApp {
-            background: linear-gradient(135deg, #f8fbff 0%, #eef4f8 45%, #f7f7fb 100%);
+            background:
+                radial-gradient(circle at 18% 10%, rgba(56, 189, 248, 0.18), transparent 28%),
+                radial-gradient(circle at 85% 8%, rgba(34, 197, 94, 0.12), transparent 24%),
+                linear-gradient(135deg, #020617 0%, #0f172a 48%, #030712 100%);
+            color: #f8fafc;
+        }
+        [data-testid="stHeader"] {
+            background: rgba(2, 6, 23, 0);
+        }
+        [data-testid="stToolbar"] {
+            right: 1rem;
+        }
+        .block-container {
+            padding-top: 2.2rem;
+            padding-bottom: 3rem;
         }
         .main-header {
-            padding: 1.5rem 0 0.75rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(17, 24, 39, 0.88));
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 8px;
+            padding: 1.6rem 1.7rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
         }
         .main-header h1 {
-            color: #102033;
-            font-size: 2.6rem;
+            color: #f8fafc;
+            font-size: 2.65rem;
             margin-bottom: 0.4rem;
+            letter-spacing: 0;
         }
         .main-header p {
-            color: #516070;
+            color: #cbd5e1;
             font-size: 1.05rem;
             max-width: 760px;
         }
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            margin-top: 1rem;
+        }
+        .hero-badge {
+            background: rgba(14, 165, 233, 0.14);
+            border: 1px solid rgba(56, 189, 248, 0.32);
+            border-radius: 999px;
+            color: #bae6fd;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 0.35rem 0.7rem;
+        }
         h2, h3, label, .stMarkdown, [data-testid="stMarkdownContainer"] {
-            color: #102033 !important;
+            color: #f8fafc !important;
         }
         [data-testid="stMetricLabel"], [data-testid="stMetricValue"] {
-            color: #102033 !important;
+            color: #f8fafc !important;
         }
         [data-testid="stMetricDelta"] {
-            color: #516070 !important;
+            color: #cbd5e1 !important;
         }
         .stNumberInput label p {
-            color: #102033 !important;
+            color: #e2e8f0 !important;
             font-weight: 650;
         }
+        [data-testid="stForm"] {
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 8px;
+            padding: 1.1rem 1.15rem 1.25rem;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+        }
+        [data-testid="stNumberInput"] input {
+            background: #020617 !important;
+            border: 1px solid #334155 !important;
+            color: #f8fafc !important;
+            border-radius: 8px !important;
+        }
+        [data-testid="stNumberInput"] button {
+            background: #111827 !important;
+            color: #e2e8f0 !important;
+            border-color: #334155 !important;
+        }
         .metric-card {
-            background: white;
-            border: 1px solid #dce5ec;
+            background: linear-gradient(180deg, rgba(17, 24, 39, 0.98), rgba(15, 23, 42, 0.98));
+            border: 1px solid rgba(148, 163, 184, 0.24);
             border-radius: 8px;
             padding: 1.1rem;
-            box-shadow: 0 8px 24px rgba(16, 32, 51, 0.06);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
             min-height: 120px;
         }
         .metric-label {
-            color: #637083;
+            color: #94a3b8;
             font-size: 0.86rem;
             margin-bottom: 0.3rem;
         }
         .metric-value {
-            color: #102033;
-            font-size: 1.75rem;
+            color: #f8fafc;
+            font-size: 1.55rem;
             font-weight: 750;
+            line-height: 1.12;
+            white-space: nowrap;
         }
         .risk-low {
-            border-left: 7px solid #2ca02c;
+            border-left: 7px solid #22c55e;
         }
         .risk-medium {
-            border-left: 7px solid #ffb000;
+            border-left: 7px solid #f59e0b;
         }
         .risk-high {
-            border-left: 7px solid #d62728;
+            border-left: 7px solid #ef4444;
         }
         .info-box {
-            background: white;
-            border: 1px solid #dce5ec;
+            background: rgba(15, 23, 42, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.22);
             border-radius: 8px;
             padding: 1rem 1.1rem;
             margin-bottom: 0.8rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
         }
         .info-box strong {
-            color: #102033;
+            color: #f8fafc;
         }
         .info-box span {
-            color: #596779;
+            color: #cbd5e1;
         }
-        div.stButton > button {
+        [data-testid="stAlert"] {
+            background: rgba(14, 165, 233, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.32);
+            border-radius: 8px;
+            color: #e0f2fe;
+        }
+        [data-testid="stProgress"] > div > div > div {
+            background-color: #38bdf8;
+        }
+        div.stButton > button,
+        div.stFormSubmitButton > button {
             width: 100%;
             border-radius: 8px;
-            background: #1264a3;
+            background: linear-gradient(135deg, #0284c7, #16a34a);
             color: white;
             border: 0;
             padding: 0.75rem 1rem;
             font-weight: 700;
+            box-shadow: 0 16px 35px rgba(2, 132, 199, 0.28);
         }
-        div.stButton > button:hover {
-            background: #0f5488;
+        div.stButton > button:hover,
+        div.stFormSubmitButton > button:hover {
+            background: linear-gradient(135deg, #0369a1, #15803d);
             color: white;
         }
     </style>
@@ -200,6 +285,11 @@ st.markdown(
             The prediction is powered by a Random Forest model trained on the AI4I 2020
             Predictive Maintenance Dataset.
         </p>
+        <div class="hero-badges">
+            <span class="hero-badge">Random Forest</span>
+            <span class="hero-badge">Real-time Risk Score</span>
+            <span class="hero-badge">AI4I 2020 Dataset</span>
+        </div>
     </div>
     """,
     unsafe_allow_html=True,
